@@ -53,10 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  Icon(Icons.wb_auto_rounded, color: Color(0xFF5DFF5F), size: 48),
-                  SizedBox(height: 16),
-                  Text(
+                children: [
+                  Image.asset(
+                    'assets/images/wasteWise.png',
+                    width: 48,
+                    height: 48,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
                     "Menu Nawigacji",
                     style: TextStyle(
                       color: Colors.white,

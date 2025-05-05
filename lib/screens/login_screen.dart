@@ -34,7 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.wb_auto_rounded, color: Color(0xFF5DFF5F), size: 72),
+                Image.asset(
+                  'assets/images/wasteWise.png',
+                  width: 72,
+                  height: 72,
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   "Nowoczesne rozwiązania",
