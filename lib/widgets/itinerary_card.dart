@@ -300,50 +300,17 @@ class ItineraryCard extends StatelessWidget {
     );
   }
 
-  void _showPlaceDetails(BuildContext context, Map<String, dynamic> place) async {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-    final api = ApiService(token: auth.token);
-
-    // Show loading indicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const AlertDialog(
-        backgroundColor: Color(0xFF1A1A2E),
-        content: Center(
-          child: Padding(
-            padding: EdgeInsets.all(24.0),
-            child: CircularProgressIndicator(),
-          ),
+  void _showPlaceDetails(BuildContext context, Map<String, dynamic> place) {
+    // Navigate directly to the details screen with parameters for loading
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PlaceDetailsScreen(
+          itineraryId: data['id'],
+          placeId: place['id'],
+          date: data['date'],
         ),
       ),
     );
-
-    try {
-      final placeDetails = await api.fetchPlaceDetails(
-        data['id'],
-        place['id'],
-        data['date'],
-      );
-
-      // Close loading dialog
-      Navigator.of(context).pop();
-
-      // Navigate to details screen
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PlaceDetailsScreen(data: placeDetails),
-        ),
-      );
-    } catch (e) {
-      // Close loading dialog
-      Navigator.of(context).pop();
-
-      // Show error
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Błąd ładowania danych")),
-      );
-    }
   }
 
   @override
