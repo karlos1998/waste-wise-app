@@ -24,26 +24,35 @@ class ItineraryCard extends StatelessWidget {
   }
 
   Widget _countItem(String label, String value, Color color) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            color: color,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -159,7 +168,7 @@ class ItineraryCard extends StatelessWidget {
 
           // Address
           Text(
-            "${place['locality']}, ul. ${place['street']} ${place['building_number']}${place['local_number'] != null ? '/' + place['local_number'] : ''}",
+            "${place['locality']}, ul. ${place['street']} ${place['building_number']}${place['local_number'] != null ? '/${place['local_number']}' : ''}",
             style: const TextStyle(color: Colors.white70, fontSize: 12),
           ),
           const SizedBox(height: 8),
@@ -231,7 +240,7 @@ class ItineraryCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "${place['locality']}, ul. ${place['street']} ${place['building_number']}${place['local_number'] != null ? '/' + place['local_number'] : ''}",
+                  "${place['locality']}, ul. ${place['street']} ${place['building_number']}${place['local_number'] != null ? '/${place['local_number']}' : ''}",
                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                 ),
               ],
@@ -283,18 +292,26 @@ class ItineraryCard extends StatelessWidget {
 
   Widget _buildTag(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: color),
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: Border.all(color: color.withOpacity(0.5), width: 1),
       ),
       child: Text(
         text,
         style: TextStyle(
           color: color,
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: FontWeight.bold,
+          letterSpacing: 0.3,
         ),
       ),
     );
@@ -334,107 +351,240 @@ class ItineraryCard extends StatelessWidget {
       }
     }
 
-    return Card(
-      color: const Color(0xFF1E1E2E),
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    // Build the header section
+    Widget headerSection = Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+        ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header section
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2A2A40),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user['name'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _formatDate(data['date']),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  user['name'],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                const Icon(Icons.directions_car, color: Colors.white, size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    "${car['brand']} ${car['model']} (${car['registration_number']})",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _formatDate(data['date']),
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    const Icon(Icons.directions_car, color: Colors.white70, size: 16),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        "Pojazd: ${car['brand']} ${car['model']}",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _countItem(
-                        "Oczekujące punkty",
-                        "${data['places_length']}",
-                        Colors.blue,
-                      ),
-                    ),
-                    Expanded(
-                      child: _countItem(
-                        "Odebrane punkty",
-                        "$receivedCount",
-                        Colors.green,
-                      ),
-                    ),
-                    Expanded(
-                      child: _countItem(
-                        "Nieodebrane punkty",
-                        "$notReceivedCount",
-                        Colors.red,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
           ),
-
-          // Places table
-          if (places != null && places.isNotEmpty) ...[
-            Container(
-              margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2A2A40),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: _buildPlacesTable(context, places),
-            ),
-          ] else ...[
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Center(
-                child: Text(
-                  "Brak punktów w trasie",
-                  style: TextStyle(color: Colors.white70),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: _countItem(
+                  "Punkty",
+                  "${data['places_length']}",
+                  const Color(0xFF60A5FA),
                 ),
               ),
+              Expanded(
+                child: _countItem(
+                  "Odebrane",
+                  "$receivedCount",
+                  const Color(0xFF34D399),
+                ),
+              ),
+              Expanded(
+                child: _countItem(
+                  "Nieodebrane",
+                  "$notReceivedCount",
+                  const Color(0xFFF87171),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    // Build the places section
+    Widget placesSection;
+    if (places != null && places.isNotEmpty) {
+      placesSection = Container(
+        margin: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF3B82F6).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.location_on,
+                      color: Color(0xFF3B82F6),
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    "Punkty odbioru",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildPlacesTable(context, places),
             ),
           ],
-        ],
+        ),
+      );
+    } else {
+      placesSection = Container(
+        margin: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(
+                Icons.info_outline,
+                color: Colors.white.withOpacity(0.5),
+                size: 48,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "Brak punktów w trasie",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Ta trasa nie ma przypisanych punktów odbioru",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.6),
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Return the main card
+    return Card(
+      elevation: 8,
+      shadowColor: Colors.black.withOpacity(0.3),
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            headerSection,
+            placesSection,
+          ],
+        ),
       ),
     );
   }

@@ -21,13 +21,25 @@ class _HomeScreenState extends State<HomeScreen> {
     final api = ApiService(token: auth.token);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F1B),
+      backgroundColor: const Color(0xFF0F1A2A),
       appBar: AppBar(
-        title: Text(_selectedIndex == 0 ? "Wszystkie trasy" : "Trasy na dziś"),
-        backgroundColor: Colors.black,
+        title: Text(
+          _selectedIndex == 0 ? "Wszystkie trasy" : "Trasy na dziś",
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: const Color(0xFF172A45),
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(16),
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () => auth.logout(),
           )
         ],
@@ -42,56 +54,78 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildDrawer() {
     return Drawer(
       child: Container(
-        color: const Color(0xFF1E1E2E),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF172A45), Color(0xFF0F1A2A)],
+          ),
+        ),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color(0xFF0F0F1B),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(24),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Image.asset(
-                    'assets/images/wasteWise.png',
-                    width: 48,
-                    height: 48,
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Image.asset(
+                      'assets/images/wasteWise.png',
+                      width: 48,
+                      height: 48,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   const Text(
                     "Menu Nawigacji",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.list_alt, color: Colors.white70),
-              title: const Text(
-                "Wszystkie trasy",
-                style: TextStyle(color: Colors.white),
-              ),
-              selected: _selectedIndex == 0,
-              selectedTileColor: const Color(0xFF4F6EF7).withOpacity(0.2),
+            const SizedBox(height: 8),
+            _buildDrawerItem(
+              icon: Icons.list_alt,
+              title: "Wszystkie trasy",
+              isSelected: _selectedIndex == 0,
               onTap: () {
                 setState(() => _selectedIndex = 0);
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.today, color: Colors.white70),
-              title: const Text(
-                "Trasy na dziś",
-                style: TextStyle(color: Colors.white),
-              ),
-              selected: _selectedIndex == 1,
-              selectedTileColor: const Color(0xFF4F6EF7).withOpacity(0.2),
+            const SizedBox(height: 8),
+            _buildDrawerItem(
+              icon: Icons.today,
+              title: "Trasy na dziś",
+              isSelected: _selectedIndex == 1,
               onTap: () {
                 setState(() => _selectedIndex = 1);
                 Navigator.pop(context);
@@ -99,6 +133,57 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        gradient: isSelected
+            ? const LinearGradient(
+                colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              )
+            : null,
+        color: isSelected ? null : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: const Color(0xFF3B82F6).withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                )
+              ]
+            : null,
+      ),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: isSelected ? Colors.white : Colors.white70,
+          size: 24,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 16,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
     );
   }
