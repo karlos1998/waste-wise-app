@@ -25,4 +25,9 @@ class ApiService {
     final response = await _dio.get('/designated-itineraries');
     return response.data['data'];
   }
+
+  Future<List<dynamic>> fetchTodayItineraries() async {
+    final response = await _dio.get('/designated-itineraries/for-today');
+    return response.data;
+  }
 }
