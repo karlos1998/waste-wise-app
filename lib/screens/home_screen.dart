@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F1B),
       appBar: AppBar(
-        title: Text(_selectedIndex == 0 ? "Wszystkie trasy" : "Wyznaczone Trasy"),
+        title: Text(_selectedIndex == 0 ? "Wszystkie trasy" : "Trasy na dziś"),
         backgroundColor: Colors.black,
         actions: [
           IconButton(
