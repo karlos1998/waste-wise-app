@@ -31,72 +31,73 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          _buildNavBar(),
-          Expanded(
-            child: _selectedIndex == 0
-                ? _buildAllItinerariesView(api)
-                : _buildTodayItinerariesView(api),
-          ),
-        ],
-      ),
+      drawer: _buildDrawer(),
+      body: _selectedIndex == 0
+          ? _buildAllItinerariesView(api)
+          : _buildTodayItinerariesView(api),
     );
   }
 
-  Widget _buildNavBar() {
-    return Container(
-      color: Colors.black,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildNavButton(
-              title: "Wszystkie trasy",
-              isSelected: _selectedIndex == 0,
-              onTap: () => setState(() => _selectedIndex = 0),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: _buildNavButton(
-              title: "Trasy na dziś",
-              isSelected: _selectedIndex == 1,
-              onTap: () => setState(() => _selectedIndex = 1),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavButton({
-    required String title,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
+  Widget _buildDrawer() {
+    return Drawer(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF4F6EF7) : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF4F6EF7) : Colors.white30,
-          ),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white70,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
+        color: const Color(0xFF1E1E2E),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color(0xFF0F0F1B),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  Icon(Icons.wb_auto_rounded, color: Color(0xFF5DFF5F), size: 48),
+                  SizedBox(height: 16),
+                  Text(
+                    "Menu Nawigacji",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.list_alt, color: Colors.white70),
+              title: const Text(
+                "Wszystkie trasy",
+                style: TextStyle(color: Colors.white),
+              ),
+              selected: _selectedIndex == 0,
+              selectedTileColor: const Color(0xFF4F6EF7).withOpacity(0.2),
+              onTap: () {
+                setState(() => _selectedIndex = 0);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.today, color: Colors.white70),
+              title: const Text(
+                "Trasy na dziś",
+                style: TextStyle(color: Colors.white),
+              ),
+              selected: _selectedIndex == 1,
+              selectedTileColor: const Color(0xFF4F6EF7).withOpacity(0.2),
+              onTap: () {
+                setState(() => _selectedIndex = 1);
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       ),
     );
   }
+
 
   Widget _buildAllItinerariesView(ApiService api) {
     return FutureBuilder<List<dynamic>>(
