@@ -30,4 +30,9 @@ class ApiService {
     final response = await _dio.get('/designated-itineraries/for-today');
     return response.data;
   }
+
+  Future<Map<String, dynamic>> fetchPlaceDetails(int itineraryId, int placeId, String date) async {
+    final response = await _dio.get('/designated-itineraries/$itineraryId/places/$placeId/date/$date');
+    return response.data;
+  }
 }
