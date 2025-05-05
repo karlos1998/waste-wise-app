@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../widgets/itinerary_card.dart';
+import '../widgets/itinerary_card_simple.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1; // Default to today's itineraries
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F1B),
       appBar: AppBar(
-        title: const Text("Wyznaczone Trasy"),
+        title: Text(_selectedIndex == 0 ? "Wszystkie trasy" : "Wyznaczone Trasy"),
         backgroundColor: Colors.black,
         actions: [
           IconButton(
@@ -111,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         return ListView(
-          children: snapshot.data!.map((e) => ItineraryCard(data: e)).toList(),
+          children: snapshot.data!.map((e) => ItineraryCardSimple(data: e)).toList(),
         );
       },
     );
@@ -124,8 +125,39 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasError || !snapshot.hasData) {
+        if (snapshot.hasError) {
           return const Center(child: Text("Błąd ładowania danych", style: TextStyle(color: Colors.white)));
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.info_outline, color: Colors.white70, size: 48),
+                const SizedBox(height: 16),
+                const Text(
+                  "Brak wyznaczonych tras na dziś",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => setState(() => _selectedIndex = 0),
+                  child: const Text("Zobacz wszystkie trasy"),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // If there's only one itinerary, show it expanded
+        if (snapshot.data!.length == 1) {
+          return ListView(
+            children: [ItineraryCard(data: snapshot.data![0])],
+          );
         }
 
         return ListView(
